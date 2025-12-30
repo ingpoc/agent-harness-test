@@ -2,6 +2,10 @@
 
 This is a **test project** for validating the Agent Harness system. Build a real app while logging issues/improvements found.
 
+> **⚠️ KEY NOTE**: First test cycle completed (CLI Todo App). **~50% compliance** with DESIGN-v2. Critical gaps: Hooks not firing (0/12), session entry protocol skipped. See `.agent-harness/improvements.md` for 9 documented issues.
+
+---
+
 ## Project Purpose
 
 Test Agent Design-v2 in production. Build a functional app to uncover edge cases, gaps, and improvements needed.
@@ -101,6 +105,8 @@ echo "## [Category] Title" >> .agent-harness/improvements.md
 - `.claude/config/project.json` - Project settings (auto-detected)
 - `.claude/progress/state.json` - Current state
 - `.claude/progress/feature-list.json` - Features
+
+> **Note**: `.agent-harness/` contains only 2 files: `DESIGN-v2.md` (spec) and `improvements.md` (all issues logged).
 
 ---
 
