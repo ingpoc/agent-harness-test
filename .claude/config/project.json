@@ -1,0 +1,8 @@
+{
+  "project_type": "python",
+  "dev_server_port": null,
+  "health_check": "",
+  "test_command": "pytest",
+  "required_env": [],
+  "required_services": []
+}

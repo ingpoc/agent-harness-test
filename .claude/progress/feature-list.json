@@ -1,0 +1,134 @@
+{
+  "project": "CLI Todo App",
+  "created_at": "2025-12-30T16:27:00+05:30",
+  "features": [
+    {
+      "id": "F-001",
+      "description": "Project structure and dependencies setup",
+      "priority": "P0",
+      "status": "implemented",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Python project with virtual environment",
+        "requirements.txt with typer/click and pytest",
+        "Basic package structure (src/)",
+        "README.md with setup instructions"
+      ]
+    },
+    {
+      "id": "F-002",
+      "description": "Todo data model and storage",
+      "priority": "P0",
+      "status": "pending",
+      "dependencies": [
+        "F-001"
+      ],
+      "acceptance_criteria": [
+        "Todo model with id, title, description, status, created_at",
+        "JSON file storage backend",
+        "CRUD operations for todos",
+        "Auto-incrementing semantic IDs"
+      ]
+    },
+    {
+      "id": "F-003",
+      "description": "CLI add command",
+      "priority": "P0",
+      "status": "pending",
+      "dependencies": [
+        "F-002"
+      ],
+      "acceptance_criteria": [
+        "Command: todo add <title>",
+        "Optional --description flag",
+        "Returns created todo with ID",
+        "Validates input (title required)"
+      ]
+    },
+    {
+      "id": "F-004",
+      "description": "CLI list command",
+      "priority": "P0",
+      "status": "pending",
+      "dependencies": [
+        "F-003"
+      ],
+      "acceptance_criteria": [
+        "Command: todo list",
+        "Optional --status filter (pending/done)",
+        "Pretty table output",
+        "Shows ID, title, status, date"
+      ]
+    },
+    {
+      "id": "F-005",
+      "description": "CLI complete command",
+      "priority": "P1",
+      "status": "pending",
+      "dependencies": [
+        "F-004"
+      ],
+      "acceptance_criteria": [
+        "Command: todo complete <id>",
+        "Marks todo as done",
+        "Error if ID not found",
+        "Success confirmation message"
+      ]
+    },
+    {
+      "id": "F-006",
+      "description": "CLI delete command",
+      "priority": "P1",
+      "status": "pending",
+      "dependencies": [
+        "F-005"
+      ],
+      "acceptance_criteria": [
+        "Command: todo delete <id>",
+        "Confirms deletion",
+        "Error if ID not found",
+        "Actually removes from storage"
+      ]
+    },
+    {
+      "id": "F-007",
+      "description": "Unit tests for core functionality",
+      "priority": "P0",
+      "status": "pending",
+      "dependencies": [
+        "F-002",
+        "F-003",
+        "F-004"
+      ],
+      "acceptance_criteria": [
+        "Test data model CRUD",
+        "Test storage persistence",
+        "Test CLI commands",
+        "Test error handling",
+        "Coverage > 80%"
+      ]
+    },
+    {
+      "id": "F-008",
+      "description": "Documentation and packaging",
+      "priority": "P2",
+      "status": "pending",
+      "dependencies": [
+        "F-006",
+        "F-007"
+      ],
+      "acceptance_criteria": [
+        "Complete README",
+        "CLI help text for all commands",
+        "setup.py or pyproject.toml",
+        "Installable via pip"
+      ]
+    }
+  ],
+  "metadata": {
+    "total": 8,
+    "completed": 1,
+    "in_progress": 0,
+    "blocked": 0
+  }
+}
