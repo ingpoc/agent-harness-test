@@ -20,7 +20,7 @@
       "id": "F-002",
       "description": "Todo data model and storage",
       "priority": "P0",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-001"
       ],
@@ -29,7 +29,8 @@
         "JSON file storage backend",
         "CRUD operations for todos",
         "Auto-incrementing semantic IDs"
-      ]
+      ],
+      "last_commit": "165fe77"
     },
     {
       "id": "F-003",
@@ -144,7 +145,7 @@
   ],
   "metadata": {
     "total": 9,
-    "completed": 1,
+    "completed": 2,
     "in_progress": 0,
     "blocked": 0
   }
