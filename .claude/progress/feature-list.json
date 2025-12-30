@@ -132,7 +132,7 @@
       "id": "F-009",
       "description": "Documentation and packaging",
       "priority": "P2",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-006",
         "F-008"
@@ -142,12 +142,13 @@
         "CLI help text for all commands",
         "setup.py or pyproject.toml",
         "Installable via pip"
-      ]
+      ],
+      "last_commit": "bbfbee5"
     }
   ],
   "metadata": {
     "total": 9,
-    "completed": 4,
+    "completed": 9,
     "in_progress": 0,
     "blocked": 0
   }
