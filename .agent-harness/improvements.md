@@ -148,3 +148,45 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Fix Needed**: Add enforcement hook that blocks state operations until session-entry protocol complete
 
 ---
+
+---
+
+## Summary: DESIGN-v2 Compliance Analysis
+
+**Test Session**: CLI Todo App Implementation
+**Date**: 2025-12-30
+**Overall Compliance**: ~50%
+
+### What Worked ✅
+
+| Area | Status |
+|------|--------|
+| State Machine | ✅ Followed transitions properly |
+| Skills Loading | ✅ Progressive disclosure (on-demand) |
+| Documentation Hierarchy | ✅ Created CLAUDE.md, project.json |
+| Git Commits | ✅ Used proper feat-id format |
+| Testing | ✅ Ran pytest, got 86% coverage |
+
+### What Didn't Work ❌
+
+| Area | Issue |
+|------|--------|
+| Session Entry Protocol | ❌ Never ran, skipped safety checks |
+| Hooks Enforcement | ❌ 0/12 hooks fired during actions |
+| Code Verification | ⚠️ Mixed - some tests, mostly judgment |
+| Token Efficiency | ❌ No compression, full file reads |
+| init-project.sh | ❌ Not called, .claude/CLAUDE.md missing |
+
+### Priority Fixes
+
+1. **Get hooks working** - Critical for enforcement
+2. **Enforce session entry** - Safety/validation first
+3. **Add init-project.sh to initializer** - Missing step
+4. **Fix validate-transition.sh** - Syntax error (line 47)
+
+### Files in .agent-harness/
+
+- `DESIGN-v2.md` - Full specification (37KB)
+- `improvements.md` - This file (all issues logged)
+
+---
