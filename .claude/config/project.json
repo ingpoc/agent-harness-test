@@ -1,5 +1,5 @@
 {
-  "project_type": "unknown",
+  "project_type": "python",
   "dev_server_port": 3000,
   "test_command": "echo 'No test command configured'",
   "health_check": "",

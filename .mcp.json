@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "token-efficient": {
+      "command": "node",
+      "args": [
+        "/Users/gurusharan/Documents/remote-claude/Research/agent-harness-test/mcp/token-efficient-mcp/dist/index.js"
+      ]
+    },
+    "context-graph": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/gurusharan/Documents/remote-claude/Research/agent-harness-test/mcp/context-graph-mcp",
+        "run",
+        "python",
+        "server.py"
+      ]
+    }
+  }
+}
