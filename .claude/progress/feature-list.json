@@ -113,7 +113,7 @@
       "id": "F-008",
       "description": "Unit tests for core functionality",
       "priority": "P0",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-002",
         "F-003",
@@ -125,7 +125,8 @@
         "Test CLI commands",
         "Test error handling",
         "Coverage > 80%"
-      ]
+      ],
+      "last_commit": "5cee773"
     },
     {
       "id": "F-009",
@@ -146,7 +147,7 @@
   ],
   "metadata": {
     "total": 9,
-    "completed": 3,
+    "completed": 4,
     "in_progress": 0,
     "blocked": 0
   }
