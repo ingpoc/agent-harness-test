@@ -35,3 +35,29 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Fix Needed**: Add `--config` flag or auto-detect from existing `.claude/config/project.json`
 
 ---
+
+### [INIT] feature-commit.sh assumes git repo exists
+
+**Found When**: Running `feature-commit.sh F-001` after implementing F-001
+**Severity**: minor
+**Description**: Script fails with "Not a git repository" on new projects
+
+**Expected**: Script should auto-initialize git or provide clear error with fix
+**Actual**: Script exits with error 1, agent must manually run `git init`
+
+**Fix Needed**: Check for `.git` and run `git init` if missing, or include in init state setup
+
+---
+
+### [INIT] terminal-ui-design skill not auto-discovered
+
+**Found When**: Creating skill with `init_skill.py`, then trying to load via `Skill()` tool
+**Severity**: minor
+**Description**: Skill created at `~/.claude/skills/` but `Skill()` tool couldn't find it
+
+**Expected**: Created skills should be immediately loadable
+**Actual**: Had to apply design principles manually instead of via skill
+
+**Fix Needed**: Skills may need registration step or index rebuild after creation
+
+---

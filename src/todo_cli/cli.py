@@ -6,6 +6,7 @@ Aesthetic: Minimalist Zen
 - Status symbols: ▸ pending, ✓ done, ○ empty
 """
 
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -15,6 +16,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from todo_cli.models import Status, Todo
+from todo_cli.storage import TodoStorage
+
 app = typer.Typer(
     name="todo",
     help="◆ A distinctive terminal todo manager",
@@ -22,24 +26,21 @@ app = typer.Typer(
 )
 
 console = Console()
+storage = TodoStorage()
 
 # Nord-inspired palette (Minimalist Zen)
-NORD = {
-    "bg": "#2e3440",
-    "fg": "#eceff4",
-    "accent": "#a3be8c",  # Soft green
-    "pending": "#ebcb8b",  # Soft yellow
-    "done": "#a3be8c",  # Soft green
-    "border": "#4c566a",  # Muted blue-gray
-}
+NORD_ACCENT = "#a3be8c"  # Soft green
+NORD_PENDING = "#ebcb8b"  # Soft yellow
+NORD_DONE = "#a3be8c"  # Soft green
+NORD_BORDER = "#4c566a"  # Muted blue-gray
 
 
 def header(title: str) -> None:
     """Display styled header with rounded borders."""
     rprint(
         Panel(
-            f"[bold {NORD['accent'}]◆ {title}[/]",
-            border_style=NORD["border"],
+            f"[bold {NORD_ACCENT}]◆ {title}[/]",
+            border_style=NORD_BORDER,
             padding=(0, 1),
         )
     )
@@ -47,17 +48,22 @@ def header(title: str) -> None:
 
 def show_info(message: str) -> None:
     """Display info message with icon."""
-    rprint(f"[{NORD['accent']}]▸[/] {message}")
+    rprint(f"[{NORD_ACCENT}]▸[/] {message}")
 
 
 def show_success(message: str) -> None:
     """Display success message with icon."""
-    rprint(f"[{NORD['done']}]✓[/] {message}")
+    rprint(f"[{NORD_DONE}]✓[/] {message}")
 
 
 def show_error(message: str) -> None:
     """Display error message with icon."""
     rprint(f"[bold red]✗[/] {message}")
+
+
+def format_date(date_str: str) -> str:
+    """Format ISO date to YYYY-MM-DD."""
+    return datetime.fromisoformat(date_str).strftime("%Y-%m-%d")
 
 
 @app.command()
@@ -67,39 +73,63 @@ def add(
 ) -> None:
     """Add a new todo item."""
     header("ADD TODO")
-    show_info(f"Adding: [bold]{title}[/]")
-    if description:
-        show_info(f"Desc: {description}")
-    show_success("Todo created!")
-    # TODO: Implement actual storage
+
+    try:
+        todo = Todo(title=title, description=description)
+        created = storage.add(todo)
+
+        show_info(f"Title: [bold]{created.title}[/]")
+        if created.description:
+            show_info(f"Desc: {created.description}")
+        show_success(f"Created: [bold]{created.id}[/]")
+
+    except ValueError as e:
+        show_error(str(e))
 
 
-@app.command()
+@app.command(name="list")
 def list_(
-    status: Optional[str] = typer.Option(None, "--status", "-s", help="Filter by status"),
+    status: Optional[str] = typer.Option(None, "--status", "-s", help="Filter by status (pending/done)"),
 ) -> None:
     """List all todos."""
     header("YOUR TODOS")
 
+    # Get todos with optional filter
+    if status:
+        try:
+            status_enum = Status(status)
+            todos = storage.filter_by_status(status_enum)
+        except ValueError:
+            show_error(f"Invalid status: {status}")
+            return
+    else:
+        todos = storage.list_all()
+
+    if not todos:
+        show_info("No todos found")
+        return
+
     # Create styled table
     table = Table(
         title=None,
-        border_style=NORD["border"],
-        header_style=f"bold {NORD['accent']}",
+        border_style=NORD_BORDER,
+        header_style=f"bold {NORD_ACCENT}",
         padding=(0, 1),
     )
-    table.add_column("ID", style=NORD["pending"])
+    table.add_column("ID", style=NORD_PENDING)
     table.add_column("Title")
-    table.add_column("Status", style=NORD["done"])
+    table.add_column("Status", style=NORD_DONE)
     table.add_column("Date")
 
-    # Demo data - replace with actual todos
-    table.add_row("F-001", "Add authentication", "▸ pending", "2025-12-30")
-    table.add_row("F-002", "Setup database", "✓ done", "2025-12-30")
-    table.add_row("F-003", "Write tests", "○ empty", "2025-12-30")
+    for todo in todos:
+        table.add_row(
+            todo.id,
+            todo.title,
+            f"{todo.status_symbol} {todo.status}",
+            format_date(todo.created_at),
+        )
 
     console.print(table)
-
     show_info("Use [bold]todo complete <id>[/] to mark done")
 
 
@@ -107,18 +137,32 @@ def list_(
 def complete(id: str = typer.Argument(..., help="Todo ID")) -> None:
     """Mark a todo as complete."""
     header("COMPLETE TODO")
-    show_info(f"Marking as done: [bold]{id}[/]")
-    show_success("Todo completed!")
-    # TODO: Implement actual completion
+
+    todo = storage.get(id)
+    if not todo:
+        show_error(f"Todo not found: {id}")
+        return
+
+    if todo.status == Status.DONE:
+        show_info(f"Already done: [bold]{id}[/]")
+        return
+
+    updated = storage.update(id, status=Status.DONE)
+    if updated:
+        show_success(f"Marked as done: [bold]{id}[/]")
+    else:
+        show_error(f"Failed to update: {id}")
 
 
 @app.command()
 def delete(id: str = typer.Argument(..., help="Todo ID")) -> None:
     """Delete a todo item."""
     header("DELETE TODO")
-    show_info(f"Deleting: [bold]{id}[/]")
-    show_success("Todo deleted!")
-    # TODO: Implement actual deletion
+
+    if storage.delete(id):
+        show_success(f"Deleted: [bold]{id}[/]")
+    else:
+        show_error(f"Todo not found: {id}")
 
 
 if __name__ == "__main__":
