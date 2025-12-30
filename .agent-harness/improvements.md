@@ -32,7 +32,29 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Expected**: Script should accept config via CLI flags or environment variables
 **Actual**: Script hangs waiting for user input, requires manual intervention
 
-**Fix Needed**: Add `--config` flag or auto-detect from existing `.claude/config/project.json`
+**Fix Applied**: (2025-12-30)
+- Added `--non-interactive` / `-n` flag to skip all prompts
+- Added `--yes` / `-y` flag to auto-confirm prompts
+- Added `--config` / `-c` <path> flag to use existing config
+- Added `CLAUDE_NON_INTERACTIVE` environment variable support
+- Auto-detects existing config and skips prompts in non-interactive mode
+
+**Usage**:
+```bash
+# Interactive
+setup-project-hooks.sh
+
+# Non-interactive (agent mode)
+setup-project-hooks.sh --non-interactive
+CLAUDE_NON_INTERACTIVE=1 setup-project-hooks.sh
+
+# Use existing config
+setup-project-hooks.sh --config /path/to/config.json
+```
+
+**Files Changed**:
+- `~/.claude/skills/project-hook-setup/scripts/setup-project-hooks.sh`
+- `~/.claude/skills/project-hook-setup/SKILL.md`
 
 ---
 
@@ -45,7 +67,13 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Expected**: Script should auto-initialize git or provide clear error with fix
 **Actual**: Script exits with error 1, agent must manually run `git init`
 
-**Fix Needed**: Check for `.git` and run `git init` if missing, or include in init state setup
+**Fix Applied**: (2025-12-30)
+- Added git repo check before git operations
+- Auto-initializes with `git init` if `.git` directory doesn't exist
+- Provides clear message when auto-initializing
+
+**Files Changed**:
+- `~/.claude/hooks/feature-commit.sh`
 
 ---
 
@@ -60,31 +88,7 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 
 **Fix Needed**: Skills may need registration step or index rebuild after creation
 
----
-
-### [IMPLEMENT] Rich f-string syntax error with dict access
-
-**Found When**: Writing CLI with Rich formatting like `f"[bold {NORD['accent']}]"`
-**Severity**: minor
-**Description**: Python f-strings with dict access inside Rich style tags cause syntax errors
-
-**Expected**: Should work or have clear error message
-**Actual**: `SyntaxError: closing parenthesis '}' does not match opening parenthesis '['`
-
-**Fix Needed**: Use constants instead of dict for colors: `NORD_ACCENT = "#a3be8c"`
-
----
-
-### [IMPLEMENT] Typer can't use Python reserved words as commands
-
-**Found When**: Creating `list` command with `def list_()` function
-**Severity**: minor
-**Description**: Typer doesn't automatically map `list_` to `list` command
-
-**Expected**: Automatic mapping or clear error
-**Actual**: `No such command 'list'` error
-
-**Fix Needed**: Must use `@app.command(name="list")` explicitly
+**Resolution**: (2025-12-30) - Not actually an issue. Skill was successfully executed in a later session. This may have been a temporary discovery issue that resolved itself.
 
 ---
 
@@ -110,7 +114,14 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Expected**: INIT state → initializer skill → init-project.sh → .claude/CLAUDE.md created
 **Actual**: INIT state → initializer skill → Manual setup → File missing
 
-**Fix Needed**: Add `scripts/init-project.sh` to initialization/SKILL.md instructions list
+**Fix Applied**: (2025-12-30)
+- Added `init-project.sh` to initialization skill instructions as step 2
+- Updated Scripts table to include init-project.sh
+- Updated Exit Criteria to check for `.claude/CLAUDE.md`
+- Validated skill with skill-creator's quick_validate.py (passed)
+
+**Files Changed**:
+- `~/.claude/skills/initialization/SKILL.md`
 
 **Root Cause**: The script exists and works correctly, but the skill's instructions don't tell agents to run it
 
@@ -167,6 +178,8 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Test Session**: CLI Todo App Implementation
 **Date**: 2025-12-30
 **Overall Compliance**: ~50%
+**Issues Found**: 8 (removed 2 non-library issues)
+**Issues Fixed**: 6 of 8 (75%)
 
 ### What Worked ✅
 
@@ -184,16 +197,19 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 |------|--------|
 | Session Entry Protocol | ❌ Never ran, skipped safety checks |
 | Hooks Enforcement | ✅ **FIXED** - Firing after settings.json + bug fix |
+| init-project.sh | ✅ **FIXED** - Added to initializer skill |
+| feature-commit.sh | ✅ **FIXED** - Auto git init |
+| Interactive Setup Script | ✅ **FIXED** - Non-interactive flags added |
 | Code Verification | ⚠️ Mixed - some tests, mostly judgment |
 | Token Efficiency | ❌ No compression, full file reads |
-| init-project.sh | ❌ Not called, .claude/CLAUDE.md missing |
 
 ### Priority Fixes
 
-1. ~~**Get hooks working**~~ ✅ **FIXED** (2025-12-30) - Added to settings.json
-2. **Enforce session entry** - Safety/validation first
-3. **Add init-project.sh to initializer** - Missing step
-4. **Fix validate-transition.sh** - Syntax error (line 47)
+1. ~~**Get hooks working**~~ ✅ **FIXED** (2025-12-30) - Added to settings.json + Edit support
+2. ~~**Add init-project.sh to initializer**~~ ✅ **FIXED** (2025-12-30) - Updated SKILL.md
+3. ~~**Fix feature-commit.sh git assumption**~~ ✅ **FIXED** (2025-12-30) - Auto git init
+4. ~~**Fix interactive setup script**~~ ✅ **FIXED** (2025-12-30) - Non-interactive flags
+5. **Enforce session entry** - Safety/validation first
 
 ---
 
@@ -220,8 +236,38 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 
 **Bug Fix Applied** (2025-12-30):
 - Hooks only checked `content` (Write tool) but not `new_string` (Edit tool)
-- Fixed 6 hooks: `require-commit-before-tested.py`, `require-outcome-update.py`, `link-feature-to-trace.py`, and 3 project hooks
+- Fixed 6 installed hooks: `require-commit-before-tested.py`, `require-outcome-update.py`, `link-feature-to-trace.py`, and 3 project hooks
+- Fixed 7 skill templates in global-hook-setup and project-hook-setup skills
 - Changed: `content = tool_input.get("content", "")` → `content = tool_input.get("content", "") or tool_input.get("new_string", "")`
+- Both skills validated with skill-creator's quick_validate.py
+
+---
+
+### [INIT] Skill templates had same Edit tool bug
+
+**Found When**: Analyzing hook setup skills after fixing installed hooks
+**Severity**: major
+**Description**: The skill templates (used to install hooks) had the same bug as installed hooks - only checking `content` not `new_string`
+
+**Expected**: Skill templates should support both Write and Edit tools
+**Actual**: Templates in both `global-hook-setup` and `project-hook-setup` only checked `content`
+
+**Fix Applied**: (2025-12-30)
+- Updated 7 Python hook templates across both skills
+- Added Edit tool documentation to both SKILL.md files
+- Validated both skills with skill-creator's validation scripts (passed)
+
+**Files Fixed**:
+- `~/.claude/skills/global-hook-setup/templates/verify-state-transition.py`
+- `~/.claude/skills/global-hook-setup/templates/require-commit-before-tested.py`
+- `~/.claude/skills/global-hook-setup/templates/require-outcome-update.py`
+- `~/.claude/skills/global-hook-setup/templates/link-feature-to-trace.py`
+- `~/.claude/skills/project-hook-setup/templates/verify-tests.py`
+- `~/.claude/skills/project-hook-setup/templates/verify-files-exist.py`
+- `~/.claude/skills/project-hook-setup/templates/verify-health.py`
+- Both `SKILL.md` files (added Edit tool note)
+
+**Impact**: New hook installations will have the fix from the start
 
 ### Files in .agent-harness/
 
