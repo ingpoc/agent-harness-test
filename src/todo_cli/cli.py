@@ -8,6 +8,7 @@ from rich.table import Table
 
 from todo_cli.models import TodoStatus
 from todo_cli.storage import TodoStorage
+from todo_cli.tui import run_tui
 
 app = typer.Typer(help="╔═══════════════════════════════════════╗\n║      ✦ CLI Todo App ✦               ║\n╚═══════════════════════════════════════╝")
 console = Console()
@@ -122,6 +123,18 @@ def delete(
         raise typer.Exit(1)
 
     console.print(f"\n[bold red]✗ Todo {todo_id} deleted[/bold red]")
+
+
+@app.command()
+def tui():
+    """Launch interactive terminal UI.
+
+    Examples:
+        todo tui
+    """
+    console.print("\n[bold yellow]Launching Terminal UI...[/bold yellow]")
+    console.print("[dim]Press 'q' to exit[/dim]\n")
+    run_tui()
 
 
 if __name__ == "__main__":
