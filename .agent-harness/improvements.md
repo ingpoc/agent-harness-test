@@ -61,3 +61,90 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 **Fix Needed**: Skills may need registration step or index rebuild after creation
 
 ---
+
+### [IMPLEMENT] Rich f-string syntax error with dict access
+
+**Found When**: Writing CLI with Rich formatting like `f"[bold {NORD['accent']}]"`
+**Severity**: minor
+**Description**: Python f-strings with dict access inside Rich style tags cause syntax errors
+
+**Expected**: Should work or have clear error message
+**Actual**: `SyntaxError: closing parenthesis '}' does not match opening parenthesis '['`
+
+**Fix Needed**: Use constants instead of dict for colors: `NORD_ACCENT = "#a3be8c"`
+
+---
+
+### [IMPLEMENT] Typer can't use Python reserved words as commands
+
+**Found When**: Creating `list` command with `def list_()` function
+**Severity**: minor
+**Description**: Typer doesn't automatically map `list_` to `list` command
+
+**Expected**: Automatic mapping or clear error
+**Actual**: `No such command 'list'` error
+
+**Fix Needed**: Must use `@app.command(name="list")` explicitly
+
+---
+
+### [TEST] Temporary file storage needs empty file handling
+
+**Found When**: Testing TodoStorage with NamedTemporaryFile
+**Severity**: minor
+**Description**: Empty temp files cause JSON decode error
+
+**Expected**: Should handle empty files gracefully
+**Actual**: `json.decoder.JSONDecodeError: Expecting value: line 1 column 1`
+
+**Fix Needed**: Add empty file check in `_ensure_file()` and `_load()`
+
+---
+
+### [INIT] init-project.sh not called during initialization
+
+**Found When**: User noticed `.claude/CLAUDE.md` was missing after INIT
+**Severity**: major
+**Description**: initialization skill instructions don't include init-project.sh step
+
+**Expected**: INIT state → initializer skill → init-project.sh → .claude/CLAUDE.md created
+**Actual**: INIT state → initializer skill → Manual setup → File missing
+
+**Fix Needed**: Add `scripts/init-project.sh` to initialization/SKILL.md instructions list
+
+**Root Cause**: The script exists and works correctly, but the skill's instructions don't tell agents to run it
+
+---
+
+### [INIT] Hooks installed but never triggered
+
+**Found When**: Implementation completed without any hook enforcement
+**Severity**: blocker
+**Description**: 12 hooks installed (7 global + 5 project) but 0 fired during actions
+
+**Expected**:
+- Mark feature tested → Hook runs pytest → Blocks if fail
+- Write to src/ → Hook checks dependencies → Blocks if missing
+
+**Actual**: All actions succeeded without any hook verification
+
+**Fix Needed**: Investigate why Claude Code doesn't trigger hooks - possibly:
+1. Hooks need registration in settings.json
+2. Hook event names don't match Claude Code expectations
+3. Hook permissions incorrect
+4. Claude Code version incompatibility
+
+---
+
+### [INIT] Session entry protocol not enforced
+
+**Found When**: Started work without running session-entry.sh
+**Severity**: major
+**Description**: No mechanism ensuring session-entry.sh runs before other scripts
+
+**Expected**: Hook or skill requirement blocks check-state.sh until session-entry.sh completes
+**Actual**: Went straight to check-state.sh, skipped safety checks
+
+**Fix Needed**: Add enforcement hook that blocks state operations until session-entry protocol complete
+
+---

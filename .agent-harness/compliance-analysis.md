@@ -311,6 +311,41 @@ echo '{"state": "COMPLETE"...}' > .claude/progress/state.json
 
 ---
 
+### Issue 5: Missing init-project.sh Step in Initializer
+
+**Severity**: Major
+**Description**: `.claude/CLAUDE.md` not created during INIT
+
+**Expected**:
+```
+INIT state → initializer skill → init-project.sh → .claude/CLAUDE.md created
+```
+
+**Actual**:
+```
+INIT state → initializer skill → Manual setup → .claude/CLAUDE.md missing
+```
+
+**Root Cause**: The initialization skill's SKILL.md does NOT list `init-project.sh` as a required step. The instructions mention:
+- detect-project.sh ✅
+- create-init-script.sh ✅
+- check-dependencies.sh ✅
+- create-feature-list.sh ✅
+- init-progress.sh ✅
+
+**Missing**: `init-project.sh` which creates `.claude/CLAUDE.md` (quick reference)
+
+**Fix Needed**: Add `scripts/init-project.sh` to initialization skill instructions
+
+**Evidence**:
+```bash
+# Had to run manually AFTER initialization complete:
+~/.claude/skills/initialization/scripts/init-project.sh
+# Output: Created: .claude/CLAUDE.md (quick reference)
+```
+
+---
+
 ## Root Cause Analysis
 
 ### Why Hooks Didn't Fire
