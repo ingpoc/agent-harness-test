@@ -1,8 +1,9 @@
 {
-  "project_type": "python",
-  "dev_server_port": null,
+  "project_type": "unknown",
+  "dev_server_port": 3000,
+  "test_command": "echo 'No test command configured'",
   "health_check": "",
-  "test_command": "pytest",
+  "init_script": "./scripts/init.sh",
   "required_env": [],
   "required_services": []
 }

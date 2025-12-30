@@ -1,114 +1,57 @@
-# ◆ CLI Todo App
+# CLI Todo App with Terminal UI
 
-A distinctive terminal todo manager with intentional aesthetics and the **Minimalist Zen** design philosophy.
+A beautiful terminal-based todo application with both CLI commands and an interactive TUI.
 
-## Aesthetic: Minimalist Zen
+## Features
 
-- Palette: Nord-inspired cool blues on dark gray
-- Borders: Rounded (╭─╮│╰╯)
-- Status symbols: ▸ pending, ✓ done
+- Add, list, complete, and delete todos
+- Interactive Terminal UI with rich styling
+- Color-coded status (pending=yellow, done=green)
+- Persistent JSON storage
 
 ## Installation
 
-```bash
-# Clone repository
-git clone <repo-url>
-cd cli-todo-app
-
+\`\`\`bash
 # Create virtual environment
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install in development mode
+# Install
 pip install -e .
-
-# Or install from dependencies only
-pip install -r requirements.txt
-```
+\`\`\`
 
 ## Usage
 
-```bash
-# Show help
-todo --help
-
+### CLI Commands
+\`\`\`bash
 # Add a todo
-todo add "Fix authentication" --desc "Add JWT tokens"
+todo add "Buy groceries" --description "Milk, eggs, bread"
 
 # List all todos
 todo list
 
-# List only pending todos
+# List only pending
 todo list --status pending
 
-# Mark a todo as complete
-todo complete F-001
+# Complete a todo
+todo complete 1
 
 # Delete a todo
-todo delete F-001
-```
+todo delete 1
+\`\`\`
 
-## Commands
-
-| Command | Description | Example |
-|---------|-------------|---------|
-| `add <title>` | Add new todo | `todo add "Buy milk"` |
-| `--desc, -d` | Add description | `todo add "Task" -d "Details"` |
-| `list` | List all todos | `todo list` |
-| `--status, -s` | Filter by status | `todo list -s pending` |
-| `complete <id>` | Mark as done | `todo complete F-001` |
-| `delete <id>` | Delete todo | `todo delete F-001` |
-
-## Features
-
-- ✅ Semantic IDs (F-001, F-002, etc.)
-- ✅ Add todos with title and optional description
-- ✅ List todos with styled table output
-- ✅ Filter todos by status (pending/done)
-- ✅ Mark todos as complete
-- ✅ Delete todos
-- ✅ JSON file persistence (`~/.todos.json`)
-- ✅ Rich terminal UI with Nord palette
+### Interactive TUI
+\`\`\`bash
+# Launch interactive terminal UI
+todo tui
+\`\`\`
 
 ## Development
 
-```bash
+\`\`\`bash
 # Run tests
 pytest
 
 # Run with coverage
-pytest --cov=todo_cli --cov-report=html
-
-# Install with dev dependencies
-pip install -e ".[dev]"
-```
-
-## Design Philosophy
-
-This CLI demonstrates the **terminal-ui-design** skill principles:
-
-1. **Intentional aesthetic** - Minimalist Zen with Nord palette
-2. **Cohesive color scheme** - `#a3be8c` accent, `#4c566a` border
-3. **Unicode borders** - Rounded via Rich Panel/Table
-4. **Status symbols** - `▸` pending, `✓` done
-5. **Anti-patterns avoided** - No plain text, all output styled
-
-## Storage
-
-Todos are stored in `~/.todos.json`:
-
-```json
-[
-  {
-    "id": "F-001",
-    "title": "Example todo",
-    "description": "Optional description",
-    "status": "pending",
-    "created_at": "2025-12-30T10:00:00"
-  }
-]
-```
-
-## License
-
-MIT License - see LICENSE file for details.
+pytest --cov=src/todo_cli
+\`\`\`

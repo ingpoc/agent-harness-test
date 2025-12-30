@@ -1,12 +1,12 @@
 {
-  "project": "CLI Todo App",
-  "created_at": "2025-12-30T16:27:00+05:30",
+  "project": "CLI Todo App with Terminal UI",
+  "created_at": "2025-12-30T21:41:00+05:30",
   "features": [
     {
       "id": "F-001",
       "description": "Project structure and dependencies setup",
       "priority": "P0",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [],
       "acceptance_criteria": [
         "Python project with virtual environment",
@@ -19,7 +19,7 @@
       "id": "F-002",
       "description": "Todo data model and storage",
       "priority": "P0",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-001"
       ],
@@ -34,7 +34,7 @@
       "id": "F-003",
       "description": "CLI add command",
       "priority": "P0",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-002"
       ],
@@ -49,7 +49,7 @@
       "id": "F-004",
       "description": "CLI list command",
       "priority": "P0",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-003"
       ],
@@ -64,7 +64,7 @@
       "id": "F-005",
       "description": "CLI complete command",
       "priority": "P1",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-004"
       ],
@@ -79,7 +79,7 @@
       "id": "F-006",
       "description": "CLI delete command",
       "priority": "P1",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-005"
       ],
@@ -92,9 +92,25 @@
     },
     {
       "id": "F-007",
+      "description": "Terminal UI with terminal-ui-design skill",
+      "priority": "P1",
+      "status": "pending",
+      "dependencies": [
+        "F-002"
+      ],
+      "acceptance_criteria": [
+        "Interactive TUI with rich/textual",
+        "Add/list/complete/delete actions",
+        "Keyboard navigation",
+        "Color-coded status (pending=yellow, done=green)",
+        "Real-time updates"
+      ]
+    },
+    {
+      "id": "F-008",
       "description": "Unit tests for core functionality",
       "priority": "P0",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-002",
         "F-003",
@@ -109,13 +125,13 @@
       ]
     },
     {
-      "id": "F-008",
+      "id": "F-009",
       "description": "Documentation and packaging",
       "priority": "P2",
-      "status": "implemented",
+      "status": "pending",
       "dependencies": [
         "F-006",
-        "F-007"
+        "F-008"
       ],
       "acceptance_criteria": [
         "Complete README",
@@ -126,8 +142,8 @@
     }
   ],
   "metadata": {
-    "total": 8,
-    "completed": 8,
+    "total": 9,
+    "completed": 0,
     "in_progress": 0,
     "blocked": 0
   }
