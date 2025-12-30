@@ -6,14 +6,15 @@
       "id": "F-001",
       "description": "Project structure and dependencies setup",
       "priority": "P0",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [],
       "acceptance_criteria": [
         "Python project with virtual environment",
         "requirements.txt with typer/click and pytest",
         "Basic package structure (src/)",
         "README.md with setup instructions"
-      ]
+      ],
+      "last_commit": "a16e56a"
     },
     {
       "id": "F-002",
@@ -143,7 +144,7 @@
   ],
   "metadata": {
     "total": 9,
-    "completed": 0,
+    "completed": 1,
     "in_progress": 0,
     "blocked": 0
   }
