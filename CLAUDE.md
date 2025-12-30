@@ -2,8 +2,6 @@
 
 This is a **test project** for validating the Agent Harness system. Build a real app while logging issues/improvements found.
 
-> **⚠️ KEY NOTE**: First test cycle completed (CLI Todo App). **~50% compliance** with DESIGN-v2. Critical gaps: Hooks not firing (0/12), session entry protocol skipped. See `.agent-harness/improvements.md` for 9 documented issues.
-
 ---
 
 ## Project Purpose

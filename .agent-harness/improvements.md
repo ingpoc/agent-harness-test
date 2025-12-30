@@ -128,11 +128,22 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 
 **Actual**: All actions succeeded without any hook verification
 
-**Fix Needed**: Investigate why Claude Code doesn't trigger hooks - possibly:
-1. Hooks need registration in settings.json
-2. Hook event names don't match Claude Code expectations
-3. Hook permissions incorrect
-4. Claude Code version incompatibility
+**Fix Applied**: (2025-12-30)
+- **Root Cause**: `"hooks": {}` was empty in `~/.claude/settings.json`
+- **Solution**: Added all 12 hooks to settings.json with correct format
+- **Format**:
+```json
+"hooks": {
+  "PreToolUse": [
+    { "matcher": "Write", "hooks": [...] },
+    { "matcher": "Edit", "hooks": [...] }
+  ],
+  "SessionStart": [{ "hooks": [...] }],
+  "SessionEnd": [{ "hooks": [...] }]
+}
+```
+- **Verification**: Hook script works correctly when tested directly (blocks invalid state transitions)
+- **Note**: Hooks load on new Claude Code session; requires restart to take effect
 
 ---
 
@@ -172,17 +183,45 @@ _This file logs all issues, gaps, and improvements discovered while testing the 
 | Area | Issue |
 |------|--------|
 | Session Entry Protocol | ❌ Never ran, skipped safety checks |
-| Hooks Enforcement | ❌ 0/12 hooks fired during actions |
+| Hooks Enforcement | ✅ **FIXED** - Firing after settings.json + bug fix |
 | Code Verification | ⚠️ Mixed - some tests, mostly judgment |
 | Token Efficiency | ❌ No compression, full file reads |
 | init-project.sh | ❌ Not called, .claude/CLAUDE.md missing |
 
 ### Priority Fixes
 
-1. **Get hooks working** - Critical for enforcement
+1. ~~**Get hooks working**~~ ✅ **FIXED** (2025-12-30) - Added to settings.json
 2. **Enforce session entry** - Safety/validation first
 3. **Add init-project.sh to initializer** - Missing step
 4. **Fix validate-transition.sh** - Syntax error (line 47)
+
+---
+
+## Fix Log (2025-12-30)
+
+### Hooks System Fixed
+
+**Issue**: `[INIT] Hooks installed but never triggered` (blocker)
+
+**Root Cause**: Hooks existed in `~/.claude/hooks/` and `.claude/hooks/` but `"hooks": {}` was empty in `~/.claude/settings.json`
+
+**Solution**:
+1. Added all 12 hooks to settings.json with correct JSON schema format
+2. PreToolUse hooks use `matcher` to specify which tools (Write/Edit)
+3. SessionStart/SessionEnd hooks don't use matcher
+4. Each hook has `hooks` array with command objects
+
+**Verification**:
+- Direct test: `echo '{"tool_name":"Write",...}' | python3 ~/.claude/hooks/verify-state-transition.py`
+- Result: Correctly blocked invalid state transition `COMPLETE → TEST`
+- ✅ **Session restart confirmed**: Hooks now fire automatically on Write/Edit
+- ✅ **State transition blocked**: `COMPLETE → TEST` blocked with error message
+- ✅ **Git hygiene enforced**: Tested=true blocked with uncommitted changes
+
+**Bug Fix Applied** (2025-12-30):
+- Hooks only checked `content` (Write tool) but not `new_string` (Edit tool)
+- Fixed 6 hooks: `require-commit-before-tested.py`, `require-outcome-update.py`, `link-feature-to-trace.py`, and 3 project hooks
+- Changed: `content = tool_input.get("content", "")` → `content = tool_input.get("content", "") or tool_input.get("new_string", "")`
 
 ### Files in .agent-harness/
 

@@ -20,7 +20,8 @@ def main():
 
     tool_input = input_data.get("tool_input", {})
     file_path = tool_input.get("file_path", "")
-    content = tool_input.get("content", "")
+    # Support both Write (content) and Edit (new_string)
+    content = tool_input.get("content", "") or tool_input.get("new_string", "")
 
     # Only check feature-list.json writes
     if "feature-list.json" not in file_path:
