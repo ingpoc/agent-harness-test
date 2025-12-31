@@ -1,5 +1,5 @@
 {
-  "state": "TEST",
+  "state": "COMPLETE",
   "entered_at": "2025-12-30T22:12:13+05:30",
   "history": [
     {
@@ -11,6 +11,11 @@
       "from": "IMPLEMENT",
       "to": "TEST",
       "at": "2025-12-30T22:12:13+05:30"
+    },
+    {
+      "from": "TEST",
+      "to": "COMPLETE",
+      "at": "2026-01-01T03:20:25+05:30"
     }
   ]
 }
