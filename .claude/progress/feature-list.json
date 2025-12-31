@@ -36,7 +36,7 @@
       "id": "F-003",
       "description": "CLI add command",
       "priority": "P0",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-002"
       ],
@@ -45,13 +45,14 @@
         "Optional --description flag",
         "Returns created todo with ID",
         "Validates input (title required)"
-      ]
+      ],
+      "last_commit": "5cee773"
     },
     {
       "id": "F-004",
       "description": "CLI list command",
       "priority": "P0",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-003"
       ],
@@ -60,13 +61,14 @@
         "Optional --status filter (pending/done)",
         "Pretty table output",
         "Shows ID, title, status, date"
-      ]
+      ],
+      "last_commit": "5cee773"
     },
     {
       "id": "F-005",
       "description": "CLI complete command",
       "priority": "P1",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-004"
       ],
@@ -75,13 +77,14 @@
         "Marks todo as done",
         "Error if ID not found",
         "Success confirmation message"
-      ]
+      ],
+      "last_commit": "5cee773"
     },
     {
       "id": "F-006",
       "description": "CLI delete command",
       "priority": "P1",
-      "status": "pending",
+      "status": "implemented",
       "dependencies": [
         "F-005"
       ],
@@ -90,7 +93,8 @@
         "Confirms deletion",
         "Error if ID not found",
         "Actually removes from storage"
-      ]
+      ],
+      "last_commit": "5cee773"
     },
     {
       "id": "F-007",
