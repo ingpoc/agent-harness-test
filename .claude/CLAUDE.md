@@ -1,6 +1,34 @@
-# Quick Reference
+---
+name: project
+description: CLAUDE.md for project configuration
+---
+
+## Quick Reference
+
+## Project Purpose
+
+This is a **test project** for validating the Agent Harness system. Build a real app while logging issues/improvements found.
+
+**Goal**: Test Agent Design-v2 in production by building a functional CLI todo app.
+
+> **"Break the system to make it robust"** - Find issues, document improvements, validate autonomous behavior.
 
 Full orchestrator instructions are in `~/.claude/prompts/orchestrator.md`
+
+## Agent Harness System
+
+Uses single orchestrator + skills library (NOT multi-agent).
+
+**Your skills are in**: `~/.claude/skills/`
+
+**State machine**:
+```
+START → INIT → IMPLEMENT → TEST → COMPLETE
+```
+
+## What to Build
+
+Built: CLI Todo App with Terminal UI (completed, 9 features, 24 tests passing)
 
 ## Common Commands
 
@@ -16,11 +44,23 @@ Full orchestrator instructions are in `~/.claude/prompts/orchestrator.md`
 
 # Browser smoke test (reads dev_server_port from config)
 ~/.claude/skills/browser-testing/scripts/smoke-test.sh
+
+# Log an issue
+echo "## [Category] Title" >> .agent-harness/improvements.md
 ```
 
 ## Session Entry
 
 Run: `~/.claude/skills/orchestrator/scripts/session-entry.sh`
+
+## Project Structure
+
+| Directory | Purpose |
+|-----------|---------|
+| `.claude/` | Agent Harness configuration and progress |
+| `.agent-harness/` | Test findings, design spec, and improvements log |
+| `src/` | Todo app source code |
+| `tests/` | Test files (24 tests, 66% coverage) |
 
 ## State → Skill Mapping
 
@@ -45,15 +85,6 @@ This project has two MCP servers configured in `.mcp.json`:
 | Multiple files | `batch_process_csv` | Batch processing |
 | Execute code | `execute_code` | Sandbox execution |
 
-**Examples**:
-```python
-# Instead of reading entire file
-process_logs(file_path="file.txt", pattern="error", limit=10)
-
-# Instead of reading CSV
-process_csv(file_path="data.csv", filter_expr="price > 100", limit=5)
-```
-
 ### context-graph MCP
 **Use for**: Storing decisions, querying precedents, learning from history
 
@@ -64,23 +95,46 @@ process_csv(file_path="data.csv", filter_expr="price > 100", limit=5)
 | Session complete | `context_list_categories` | Extract patterns |
 | Repeating error | `context_query_traces` | Find how it was fixed |
 
-**Examples**:
-```python
-# After choosing framework
-context_store_trace(
-    decision="Chose FastAPI over Flask for async support",
-    category="framework"
-)
-
-# Before making decision
-context_query_traces(query="web framework for high load API")
-```
-
 **Priority Rule**: Think before reading/executing - Can I use MCP servers instead?
 
 ## Config Files
 
-- `.claude/config/project.json` - Project settings
+- `.claude/config/project.json` - Project settings (auto-detected)
 - `.claude/progress/state.json` - Current state
 - `.claude/progress/feature-list.json` - Features
 - `.mcp.json` - MCP server configuration
+
+## Critical: Track Issues
+
+**Log ALL issues found to**: `.agent-harness/improvements.md`
+
+```markdown
+## [Category] Issue Title
+
+**Found When**: [What you were doing]
+**Severity**: blocker|major|minor|enhancement
+**Description**: What happened
+
+**Expected**:
+**Actual**:
+
+**Fix Needed**:
+```
+
+**Categories**:
+- `INIT` - Setup, feature breakdown, hooks
+- `IMPLEMENT` - Coding patterns, skills workflow
+- `TEST` - Verification, evidence collection
+- `COMPLETE` - Summary, learning loops
+- `GENERAL` - Cross-cutting concerns
+
+## Success Criteria
+
+1. ✅ App is working (deployable, tested)
+2. ✅ `.agent-harness/improvements.md` has detailed findings
+3. ✅ At least 3 issues documented (even if minor)
+4. ✅ Each issue has: severity, description, fix suggestion
+
+> **Note**: `.agent-harness/` contains only 2 files: `DESIGN-v2.md` (spec) and `improvements.md` (all issues logged).
+
+**Remember**: The app you're building is secondary. The **primary goal** is testing the Agent Harness system itself. Log everything that doesn't work smoothly.
